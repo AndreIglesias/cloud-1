@@ -1,0 +1,35 @@
+provider "aws" {
+  region = "eu-west-3"
+}
+
+resource "aws_instance" "wordpress" {
+  ami           = "ami-0326f9264af7e51e2" # Canonical, Ubuntu, 22.04 LTS, amd64 jammy
+  instance_type = "t2.micro"
+  key_name      = "cloud-key"
+
+  tags = {
+    Name = "WordPress-Server"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update",
+      "sudo apt-get install -y docker.io",
+      "sudo systemctl start docker",
+      "sudo systemctl enable docker",
+      "sudo usermod -aG docker ubuntu"
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("~/.ssh/cloud-key.pem")
+      host        = aws_instance.wordpress.public_ip
+    }
+  }
+}
+
+output "instance_ip" {
+  description = "The public IP of the WordPress server"
+  value       = aws_instance.wordpress.public_ip
+}
