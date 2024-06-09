@@ -1,3 +1,4 @@
+docker-webapp/srcs/.env
 .env
 ### Ansible ###
 *.retry
