@@ -17,7 +17,7 @@ This project focuses on the automated deployment of a web server and the necessa
 ## Features
 
 - Automated deployment of a WordPress site.
-- Containers for each process (WordPress, PHPmyadmin, database, etc.).
+- Containers for each process (WordPress, PHPmyadmin, MariaDB, etc.).
 - Persistence of data across server reboots.
 - Secure and limited public access.
 - TLS support for secure connections.
