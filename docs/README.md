@@ -9,6 +9,7 @@
   <br/>
   <img src="cloudflare.png" style="width: 40%;" />
 </p>
+
 ## Project Overview
 
 This project focuses on the automated deployment of a web server and the necessary Docker infrastructure on a remote server. The goal is to deploy a site, such as a WordPress blog, with each process running in its container. Automation is a key component of this project, and tools like Terraform, Ansible and Docker Compose are used for this process.
