@@ -1,0 +1,17 @@
+# Deploy Docker Compose webapp
+- name: Deploy Webapp with Docker Compose
+  hosts: wordpress
+  become: yes
+  tasks:
+    - name: Docker compose up the webapp
+      command: make
+      args:
+        chdir: /home/ubuntu/webapp/
+      async: 3600   # Set timeout to 1 hour
+      poll: 5       # Poll every 5 seconds for status
+      register: make_result
+
+    - name: Show make output
+      debug:
+        msg: "{{ item }}"
+      loop: "{{ make_result.stdout_lines }}"

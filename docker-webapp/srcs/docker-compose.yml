@@ -1,0 +1,82 @@
+
+networks:
+  inception-network:
+    name: inception-network
+
+volumes:
+  wordpress_data:
+  mariadb_data:
+
+services:
+
+  # Nginx
+  nginx:
+    image: nginx
+    container_name: nginx
+    build:
+      context: requirements/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"
+    restart: always
+    networks:
+      - inception-network
+    volumes:
+      - wordpress_data:/var/www/html
+    depends_on:
+      - wordpress
+      - phpmyadmin
+    
+  # Wordpress
+  wordpress:
+    image: wordpress
+    container_name: wordpress
+    build:
+      context: requirements/wordpress
+      dockerfile: Dockerfile
+    env_file: .env
+    restart: always
+    networks:
+      - inception-network
+    depends_on:
+      - mariadb
+    volumes:
+      - wordpress_data:/var/www/html
+
+  # PhpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mariadb
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PWD}
+    networks:
+      - inception-network
+    depends_on:
+      - mariadb
+
+  # MariaDB
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    build:
+      context: requirements/mariadb
+      dockerfile: Dockerfile
+    env_file: .env
+    restart: always
+    networks:
+      - inception-network
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  # Cloudflare Tunnel
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    command: tunnel --no-autoupdate run --token ${CF_TOKEN}
+    restart: always
+    networks:
+      - inception-network
+    env_file: .env
+
