@@ -3,6 +3,10 @@
   hosts: wordpress
   become: yes
   tasks:
+    - name: Update package list
+      apt:
+        update_cache: yes
+
     - name: Install Docker dependencies
       apt:
         name: "{{ item }}"
