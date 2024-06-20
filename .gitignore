@@ -1,3 +1,4 @@
+.vagrant/
 docker-webapp/srcs/.env
 .env
 ### Ansible ###
